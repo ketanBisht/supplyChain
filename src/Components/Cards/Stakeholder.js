@@ -3,7 +3,6 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Services/Contexts/AuthContext";
 import { ContractContext } from "../../Services/Contexts/ContractContext";
 import '../../Assests/Styles/card.css';
-import Toast from "../Toast";
 import stakeholder_default from '../../Assests/Images/stakeholder_default.jpg';
 import { fetchStakeholder } from "../../Services/Utils/stakeholder";
 
@@ -25,7 +24,7 @@ const StakeholderCard = ({ id }) => {
         id
       ));
     })();
-  }, []);
+  }, [authState.address, contractState.stakeholderContract, id]);
 
   return (
     <div className="col-12 col-lg-6 my-1">
@@ -34,6 +33,7 @@ const StakeholderCard = ({ id }) => {
           <img 
             src={stakeholder_default}
             width="100%"
+            alt="stakeholder"
           />
         </div>
         <div className="col-12 col-md-8">

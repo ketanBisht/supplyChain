@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react"
+import { useContext, useState } from "react"
 import { Button, Input, InputGroup, InputGroupText, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { NFTStorage } from "nft.storage/dist/bundle.esm.min.js";
 
@@ -46,7 +46,7 @@ const LaunchProduct = ({isModalOpen, toggleModal, manufacturerRP}) => {
         "isVerified": manufacturerRP[key].isVerified
       }
     })
-    if(selectedRP.length == 0){
+    if(selectedRP.length === 0){
       Toast("error", "Please select atleast one raw product");
       return;
     }
@@ -79,7 +79,7 @@ const LaunchProduct = ({isModalOpen, toggleModal, manufacturerRP}) => {
           : null
           }
           {product.image.url ?
-            <img src={product.image.url} alt="product image" width="60%"/>
+            <img src={product.image.url} alt="product" width="60%"/>
           :
            null
           }

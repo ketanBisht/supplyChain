@@ -1,4 +1,3 @@
-import product_default from '../../Assests/Images/product_default.jpg';
 import Rating from '../Rating';
 const ProductCard = ({product}) => {
   return (
@@ -8,6 +7,7 @@ const ProductCard = ({product}) => {
           <img 
             src={product.item["image_url"]}
             width="100%"
+            alt={product.item["title"]}
           />
         </div>
         <div className="col-12 col-md-8">

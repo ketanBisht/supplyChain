@@ -32,7 +32,7 @@ const ManufacturerCard = ({id, manufacturerObject}) => {
         ))
       })();
     }
-  }, [manufacturerObject])
+  }, [manufacturerObject, contractState.manufacturerContract, authState.address, id])
 
   const verify = async () => {
     try{
@@ -71,6 +71,7 @@ const ManufacturerCard = ({id, manufacturerObject}) => {
           <img 
             src={manufacturer_default}
             width="100%"
+            alt="manufacturer"
           />
         </div>
         <div className="col-12 col-md-8">

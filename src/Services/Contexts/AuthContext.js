@@ -17,39 +17,60 @@ export const AuthContextProvider = ({children}) => {
   })
 
   useEffect(() => {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      window.ethereum.enable();
-      authDispatch(authStateEnableWeb3());
-    }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-      authDispatch(authStateEnableWeb3());
-    }
-    else {
-      const errMess = "Non-Ethereum browser detected";
-      authDispatch(authStateFailed(errMess));
-      authDispatch(authStateDisableWeb3());
-      Toast("error", errMess);
-      throw new Error(errMess);
-    }
-  }, [])
+    const initWeb3 = () => {
+      if (window.ethereum || window.backpack) {
+        // We initialize with the best available default, 
+        // but connectWallet will target specific ones.
+        const provider = window.backpack ? window.backpack.ethereum : window.ethereum;
+        window.web3 = new Web3(provider);
+        authDispatch(authStateEnableWeb3());
+      } else if (window.web3) {
+        window.web3 = new Web3(window.web3.currentProvider);
+        authDispatch(authStateEnableWeb3());
+      } else {
+        const errMess = "Non-Ethereum browser detected";
+        authDispatch(authStateFailed(errMess));
+        authDispatch(authStateDisableWeb3());
+      }
+    };
+    initWeb3();
+  }, []);
 
+  const connectWallet = async (walletType) => {
+    try {
+      let provider = window.ethereum;
 
-  const connectWallet = async () => {
-    if(authState.isWeb3Enabled) {
-      try {
-        const selectedAccount = await window.ethereum
-        .request({
-          method: "eth_requestAccounts",
-        })
-        .then((accounts) => accounts[0])
-        .catch(() => {
-          Toast("error", "Please select an account");
-        });
+      if (walletType === 'Backpack' && window.backpack) {
+        provider = window.backpack.ethereum;
+      } else if (walletType === 'MetaMask' && window.ethereum) {
+        // If there are multiple providers, find the one that is MetaMask
+        if (window.ethereum.providers) {
+          provider = window.ethereum.providers.find((p) => p.isMetaMask) || window.ethereum;
+        }
+      }
+
+      if (!provider) {
+        Toast("error", `${walletType} not detected!`);
+        return;
+      }
+
+      window.web3 = new Web3(provider);
+
+      const accounts = await provider.request({
+        method: "eth_requestAccounts",
+      });
+      
+      if (accounts && accounts.length > 0) {
+        const selectedAccount = accounts[0];
         authDispatch(authStateLogin(selectedAccount));
-        Toast("success", "Successfully Logged in");
-      } catch( error ) {
+        Toast("success", `Successfully connected to ${walletType}`);
+      } else {
+        Toast("error", "No accounts found. Please unlock your wallet.");
+      }
+    } catch( error ) {
+      if (error.code === 4001) {
+        Toast("error", "Connection request rejected.");
+      } else {
         Toast("error", error.message);
       }
     }

@@ -9,7 +9,7 @@ import { fetchFarmer } from "../../Services/Utils/stakeholder";
 const Farmer = () => {
   const { authState }  = useContext(AuthContext);
   const { contractState } = useContext(ContractContext);
-  const [farmerAddress, setFarmerAddress] = useState(authState.address);
+  const [farmerAddress] = useState(authState.address);
   const [farmer, setFarmer] = useState({});
   const [addRPState, setAddRPState] = useState(null);
 
@@ -19,7 +19,7 @@ const Farmer = () => {
         setFarmer(await fetchFarmer(authState.address, contractState.farmerContract, farmerAddress));
       })();
     }
-  },[])
+  },[authState.address, contractState.farmerContract, farmerAddress])
 
   const addRawProduct = async () => {
     if(!addRPState) {

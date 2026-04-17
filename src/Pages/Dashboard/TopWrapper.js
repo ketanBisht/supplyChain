@@ -4,7 +4,7 @@ const TopWrapper  = () => {
     <div className="top-wrapper">
       <div className="row d-flex justify-content-between">
         <div className="col-12 col-md-6">
-          <img src={img_cover} width="100%"/>
+          <img src={img_cover} width="100%" alt="supply chain cover"/>
         </div>
         <div className="col-12 col-md-6">
           <div className="tw-about text-center">

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer, useState } from "react";
 import { contractReducer } from "../Reducers/ContractReducer";
 
 import MainContract from '../../Smart-Contract/ABI/Main.json';
@@ -16,6 +16,7 @@ import {
 } from '../Actions/ContractActionCreator';
 import { authStateStakeholder } from '../Actions/AuthActionCreator';
 import { AuthContext } from "./AuthContext";
+import Toast from "../../Components/Toast";
 
 export const ContractContext = createContext();
 export const ContractContextProvider = ({children}) => {
@@ -36,12 +37,38 @@ export const ContractContextProvider = ({children}) => {
   const [networkId, setNetworkId] = useState(null);
   const { authState, authDispatch } = useContext(AuthContext);
 
+  const loadStakeholder = useCallback(async () => {
+    if(contractState.stakeholderContract){
+      let stakeholderDetails = await contractState.stakeholderContract.methods.get(authState.address).call({from: authState.address});
+      stakeholderDetails = {
+        id: stakeholderDetails.id,
+        name: stakeholderDetails.name,
+        location: stakeholderDetails.location,
+        role: stakeholderDetails.role === "" ? "new" : stakeholderDetails.role,
+        isRegistered: stakeholderDetails.role === "" ? false : true,
+        isVerified: stakeholderDetails.isVerified
+      }
+      const role = await contractState.mainContract.methods.getRole(authState.address).call();
+      if(role === "admin"){
+        stakeholderDetails.role = role;
+      }
+      authDispatch(authStateStakeholder(stakeholderDetails));
+    }
+  }, [contractState.stakeholderContract, contractState.mainContract, authState.address, authDispatch])
+
   useEffect(() => {
     (async () => {
       if(authState.isWeb3Enabled){
         const web3 = window.web3;
         const networkId = await web3.eth.net.getId();
         setNetworkId(networkId);
+
+        if (!MainContract.networks[networkId] || !ProductContract.networks[networkId] || 
+            !FarmerContract.networks[networkId] || !ManufacturerContract.networks[networkId]) {
+          Toast("error", "Smart contracts not deployed on the current network!");
+          return;
+        }
+
         const main = new web3.eth.Contract(MainContract.abi, MainContract.networks[networkId].address);
         contractDispatch(contractStateMain(main));
         const product  = new web3.eth.Contract(ProductContract.abi, ProductContract.networks[networkId].address);
@@ -65,45 +92,39 @@ export const ContractContextProvider = ({children}) => {
         const web3 = window.web3;
         const role = await contractState.mainContract.methods.getRole(authState.address).call();
         if( role === "farmer"){
+          if (!FarmerContract.networks[networkId]) {
+             Toast("error", "Farmer contract not found on this network.");
+             return;
+          }
           const farmer = new web3.eth.Contract(FarmerContract.abi, FarmerContract.networks[networkId].address);
           contractDispatch(contractStateStakeholder(farmer));
         }
         else if(role === 'manufacturer'){
+          if (!ManufacturerContract.networks[networkId]) {
+            Toast("error", "Manufacturer contract not found on this network.");
+            return;
+          }
           const manufacturer = new web3.eth.Contract(ManufacturerContract.abi, ManufacturerContract.networks[networkId].address);
           contractDispatch(contractStateStakeholder(manufacturer));
         }
         else {
+          if (!StakeholderContract.networks[networkId]) {
+            Toast("error", "Stakeholder contract not found on this network.");
+            return;
+          }
           const stakeholder = new web3.eth.Contract(StakeholderContract.abi, StakeholderContract.networks[networkId].address);
           contractDispatch(contractStateStakeholder(stakeholder));
         }
       }
     })();
-  }, [authState.isAuthenticated, contractState.mainContract])
+  }, [authState.isAuthenticated, authState.address, contractState.mainContract, networkId])
 
   useEffect(() => {
     (async () => {
       await loadStakeholder();
     })();
-  }, [contractState.stakeholderContract])
+  }, [contractState.stakeholderContract, loadStakeholder])
 
-  const loadStakeholder = async () => {
-    if(contractState.stakeholderContract){
-      let stakeholderDetails = await contractState.stakeholderContract.methods.get(authState.address).call({from: authState.address});
-      stakeholderDetails = {
-        id: stakeholderDetails.id,
-        name: stakeholderDetails.name,
-        location: stakeholderDetails.location,
-        role: stakeholderDetails.role === "" ? "new" : stakeholderDetails.role,
-        isRegistered: stakeholderDetails.role === "" ? false : true,
-        isVerified: stakeholderDetails.isVerified
-      }
-      const role = await contractState.mainContract.methods.getRole(authState.address).call();
-      if(role == "admin"){
-        stakeholderDetails.role = role;
-      }
-      authDispatch(authStateStakeholder(stakeholderDetails));
-    }
-  }
 
   const updateStats = async () => {
     const stats = {};

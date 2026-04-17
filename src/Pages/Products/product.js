@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import '../../Assests/Styles/product.page.css';
 import { useLocation } from 'react-router-dom';
@@ -21,7 +21,7 @@ const Product = () => {
     comment: "",
     from: authState.address,
   })
-  const [isOwner, setIsOnwer] = useState(authState.address.toLowerCase() == location.state.product.item["currentOwner"].toLowerCase());
+  const [isOwner] = useState(authState.address.toLowerCase() === location.state.product.item["currentOwner"].toLowerCase());
 
   const reload = async () => {
     const id = location.state.product.item.id;
@@ -100,7 +100,7 @@ const Product = () => {
     <div className="wrapper">
       <div className="row top-wrapper">
         <div className="col-12 col-md-4 tw-left">
-          <img src={product.item["image_url"]} width="100%"/>
+          <img src={product.item["image_url"]} width="100%" alt={product.item["title"]}/>
         </div>
         <div className="col-12 col-md-8 tw-right">
           <span className="tw-heading1">

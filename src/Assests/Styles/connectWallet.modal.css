@@ -1,0 +1,29 @@
+.connect-wallet-modal .modal-header {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.connect-wallet-modal .modal-footer {
+    border-top: none;
+    padding-top: 0;
+}
+
+.wallet-option-button {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    background-color: transparent;
+}
+
+.wallet-option-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.wallet-option-button .fw-bold {
+    font-size: 1.1rem;
+}
+
+.wallet-option-button small {
+    display: block;
+}

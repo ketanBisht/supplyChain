@@ -23,7 +23,7 @@ const Products = () => {
         setProductids(productIds);
       })();
     }
-  },[])
+  },[contractState.productContract, authState.address])
 
   useEffect(() => {
     if(contractState.productContract){
@@ -38,7 +38,7 @@ const Products = () => {
             "transactions": response.transactions,
             "manufacturer": await fetchManufacturer(authState.address, contractState.manufacturerContract, response.item["manufacturer"])
           }
-          if(product.item.manufacturer != "0x0000000000000000000000000000000000000000"){
+          if(product.item.manufacturer !== "0x0000000000000000000000000000000000000000"){
             products[productIds[i]] = product;
           }
         }
@@ -46,7 +46,7 @@ const Products = () => {
         setProducts(products);
       })();
     }
-  }, [productIds])
+  }, [productIds, contractState.productContract, contractState.manufacturerContract, authState.address])
 
   return (
     <div className="wrapper">
@@ -57,7 +57,7 @@ const Products = () => {
             <Input placeholder="Search" id="search"/>
             <Button onClick={()=> {
               const productId = document.getElementById("search").value;
-              if(productId == ""){
+              if(productId === ""){
                 Toast("error", "Please enter a product id");
                 return;
               }
@@ -80,7 +80,7 @@ const Products = () => {
         {productIds.length > 0 && Object.keys(products).length === 0 ?
           <div align="center">
             <div className="col-10 col-md-6">
-              <img src={fake_product} width="100%" />
+              <img src={fake_product} width="100%" alt="fake product" />
               <span>
                 No products found
               </span>

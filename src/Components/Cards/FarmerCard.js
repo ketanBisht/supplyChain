@@ -27,7 +27,7 @@ const FarmerCard = ({id, farmerObject}) => {
         setFarmer(await fetchFarmer(authState.address, contractState.farmerContract, id));
       })();
     }
-  }, [farmerObject])
+  }, [farmerObject, contractState.farmerContract, authState.address, id])
 
   const verify = async () => {
     try{
@@ -51,6 +51,7 @@ const FarmerCard = ({id, farmerObject}) => {
           <img 
             src={farmer_default}
             width="100%"
+            alt="farmer"
           />
         </div>
         <div className="col-12 col-md-8">

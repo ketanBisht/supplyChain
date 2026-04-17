@@ -1,13 +1,16 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Collapse, Nav, Navbar, NavbarBrand, NavbarText, NavbarToggler, NavItem } from "reactstrap";
 import { NavLink } from 'react-router-dom';
 
 import logo from '../../Assests/Images/logo_mini.png';
 import { AuthContext } from "../../Services/Contexts/AuthContext";
+import ConnectWalletModal from "../../Components/Modals/ConnectWalletModal";
 
 const Header = () => {
   const {authState, connectWallet, logout}  = useContext(AuthContext);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+  
   const isAuthenticated = authState.isAuthenticated;
   const role = authState.stakeholder.role;
   const style = {
@@ -23,6 +26,16 @@ const Header = () => {
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
   }
+
+  const toggleWalletModal = () => {
+    setIsWalletModalOpen(!isWalletModalOpen);
+  }
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setIsWalletModalOpen(true);
+    }
+  }, [isAuthenticated]);
 
   const roleNavLinks = () => {
     switch(role) {
@@ -74,13 +87,18 @@ const Header = () => {
 
   return (
     <div className="container">
+      <ConnectWalletModal 
+        isOpen={isWalletModalOpen} 
+        toggle={toggleWalletModal} 
+        connectWallet={connectWallet} 
+      />
       <Navbar 
         color="warning"
         expand='md' 
         dark
       >
         <NavbarBrand>
-          <img src={logo} />
+          <img src={logo} alt="logo" />
           Global Supply Solutions
         </NavbarBrand>
         <NavbarToggler onClick={toggleNav} >
@@ -125,7 +143,7 @@ const Header = () => {
             :
               <>
               <NavItem>
-                <NavbarText type="button" onClick={connectWallet} style={style.authButton}>
+                <NavbarText type="button" onClick={toggleWalletModal} style={style.authButton}>
                 <i className="fa fa-sign-in fa-lg"/> Login
                 </NavbarText>
               </NavItem>

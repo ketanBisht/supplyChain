@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Card, CardBody, CardTitle } from "reactstrap";
 import ManufacturerCard from "../../Components/Cards/ManufacturerCard";
 import ProductCard from "../../Components/Cards/ProductCard";
@@ -12,7 +12,7 @@ import { fetchManufacturer } from "../../Services/Utils/stakeholder";
 const Manufacturer = () => {
   const { authState } = useContext(AuthContext);
   const { contractState } = useContext(ContractContext);
-  const [manufacturerAddress, setManufacturerAddress] = useState(authState.address);
+  const [manufacturerAddress] = useState(authState.address);
   const [manufacturer, setManufacturer] = useState({
     rawProducts: [],
     launchedProducts: [],
@@ -20,15 +20,7 @@ const Manufacturer = () => {
   const [isRPModalOpen, setIsRPModalOpen] = useState(false);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (contractState.manufacturerContract) {
-      (async () => {
-        await loadManufacturer();
-      })();
-    }
-  }, [])
-
-  const loadManufacturer = async () => {
+  const loadManufacturer = useCallback(async () => {
     if (contractState.manufacturerContract) {
       const manufacturerObject = await fetchManufacturer(authState.address, contractState.manufacturerContract, manufacturerAddress);
       const launchedProducts = [];
@@ -42,7 +34,15 @@ const Manufacturer = () => {
         launchedProducts,
       });
     }
-  }
+  }, [authState.address, contractState.manufacturerContract, contractState.productContract, manufacturerAddress])
+
+  useEffect(() => {
+    if (contractState.manufacturerContract) {
+      (async () => {
+        await loadManufacturer();
+      })();
+    }
+  }, [contractState.manufacturerContract, loadManufacturer])
 
   const toggleRPModal = async () => {
     setIsRPModalOpen(!isRPModalOpen);
