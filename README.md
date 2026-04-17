@@ -1,126 +1,92 @@
 # Authenticity in Food Supply Chain Using Blockchain
-![Solidity](https://img.shields.io/badge/Solidity-000000?style=for-the-badge&logo=solidity&logoColor=white)
-![Ethereum](https://img.shields.io/badge/Ethereum-white?style=for-the-badge&logo=ethereum&logoColor=blue)
-![Javascript](https://img.shields.io/badge/Javascript-ffff00?&style=for-the-badge&logo=react&logoColor=black) 
-![React](https://img.shields.io/badge/React-0095D5?&style=for-the-badge&logo=react&logoColor=white) 
 
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lakshya-20/supply-chain?style=for-the-badge)
-[![GitHub last commit](https://img.shields.io/github/last-commit/lakshya-20/supply-chain?style=for-the-badge)](https://github.com/lakshya-20/supply-chain/commits)
+A decentralized supply chain application designed to trace food products from farm to table. This project uses Ethereum smart contracts and a React-based frontend to ensure transparency, prevent fraud, and reduce supply chain costs.
 
+## 🚀 Quick Start Guide
 
-## Project description
+This guide will help you set up and run the project on your local machine using the **Sepolia Testnet**.
 
-### Introduction
-The food supply chain is a complex but necessary food production arrangement needed by the global community to maintain sustainability and food security. The supply chain has been extended geographically involving many more stakeholders, making the supply chain longer and complicated and thus involving many challenges.
+### Prerequisites
 
-Some of the challenges that are commonly faced in food supply chains are
-* Lack of traceability and communication.
-* Rising supply chain costs.
-* Supply of fraudulent food products.
-* Failure in monitoring warehouses.
+You will need the following tools installed:
+- [Node.js](https://nodejs.org/) (Version 16 or higher recommended)
+- [Truffle](https://www.trufflesuite.com/truffle): `npm install -g truffle`
+- [MetaMask](https://metamask.io/) or [Backpack](https://backpack.app/) Wallet extension in your browser.
 
-### Objectives
-The project aims to design a decentralized food supply chain to trace products from end to end and provide a smart and reliable way of providing information to the customers. <br/>
-**Features**
-* Platform to trace food products worldwide.
-* Restricting duplicate and unauthentic products.
-* Proper food distribution.
-* Reducing the supply chain costs.
+---
 
-### System Architecture
-The application follows the layered architecture where components which similar functionality are organized into horizontal layers and each layer has a specific role within the application.
-<br/>
-The system architecture consists of three layers:
-- Application Layer
-- Blockchain Layer
-- Infrastructure Layer
-<p align="center">
-  <img src="https://res.cloudinary.com/dstmsi8qv/image/upload/v1652867380/Supply%20Chain/Github%20Readme/layer_arch_s5avzr.png" width="500px"/>
-</p>
+### 🛠 Phase 1: Environment Setup
 
-### Methodology
-The project is build on three core modules: Traceability System, Trading Mechanism and Reputation System.
-1. **Traceability System**
-    * Each product is marked with unique serial code which is onwed by an externally owned account on Ethereum.
-    * Every product transaction is recorded and stored in smart contract and linked with product's serial code.
-    * This comes with Access Control Strategy which allows only authentic users to make specific transactions.
-2. **Trading Mechanism**
-    <p align="center">
-      <img src="https://res.cloudinary.com/dstmsi8qv/image/upload/v1652867380/Supply%20Chain/Github%20Readme/trading_mechanism_icqvdz.png" width="500px"/>
-    </p>
+1.  **Get an Alchemy API Key**:
+    - Go to [Alchemy.com](https://www.alchemy.com/) and create a free account.
+    - Create a new App on the **Ethereum Sepolia** network and copy the **API Key**.
+2.  **Get your Wallet Mnemonic**:
+    - In your wallet (MetaMask or Backpack), go to **Settings** -> **Security** -> **Reveal Secret Recovery Phrase**.
+3.  **Configure `.env`**:
+    - In the root folder of the project, create or open the `.env` file and fill it in:
+      ```text
+      ALCHEMY_API_KEY=your_alchemy_api_key_here
+      MNEMONIC=your_12_word_seed_phrase_here
+      ```
 
-    * The process of delivering goods from one entity to another is tracked and recorded on the blockchain.
-    * The consumers first register themselves on the system and request to purchase the product with a serial number.
-    * The purchase request is sent to the product owner who updates the product ownership with the new owner.
-    * This process ensures that retailers do not sell products with duplicate serial codes.
-3. **Reputation System**
-    <p align="center">
-      <img src="https://res.cloudinary.com/dstmsi8qv/image/upload/v1652867379/Supply%20Chain/Github%20Readme/reputation_system_wumzif.png" width="500px"/>
-    </p>
+---
 
-    * This system adds a layer of trust between customers and retailers.
-    * This mechanism allows only actual customers of the product to post feedback about the product.
-    * The reviews on the blockchain are immutable which does not allow any merchant or retailer to delete or update bad reviews to increase their overall ratings. 
-    * And in this way this mechanism maintains the complete integrity of the retailer and let the customer know about the seller before making the transaction.
+### 📦 Phase 2: Smart Contract Deployment
 
+1.  **Install Dependencies**:
+    ```bash
+    cd src/smart-contract
+    npm install
+    ```
+2.  **Get Sepolia ETH**:
+    - You need some free test ETH to deploy. Use a faucet like [sepoliafaucet.com](https://www.sepoliafaucet.com/).
+3.  **Deploy to Sepolia**:
+    ```bash
+    truffle migrate --network sepolia
+    ```
+    *This will compile your contracts and upload them to the testnet.*
 
-## Development Setup
-### Requirements
-- [NodeJS](https://nodejs.org/en) >= 10.16 and [npm](https://www.npmjs.com/) >= 5.6 installed.
-- [Git](https://git-scm.com/) installed in the system.
-- [Truffle](https://www.trufflesuite.com/truffle), which can be installed globally with `npm install -g truffle`
-- [Metamask](https://metamask.io) extension added to the browser.
-- [Ganache](https://trufflesuite.com/ganache/) development network.
+---
 
-**Clone the repository**
-```bash
-git clone https://github.com/lakshya-20/supply-chain
-```
+### 💻 Phase 3: Launch the Frontend
 
-### Setting Up Truffle Project
-Smart contracts or blockchain codes are necessary config files for developing, testing and deploying application business logic are present inside `src/Smart-Contract` directory. 
+1.  **Return to the root folder**:
+    ```bash
+    cd ../..
+    ```
+2.  **Install Frontend Dependencies**:
+    ```bash
+    npm install
+    ```
+3.  **Start the Application**:
+    ```bash
+    npm start
+    ```
+    *The app will open automatically at `http://localhost:3000`.*
 
-**Checkout smart contracts directory**
-```
-cd src/Smart-Contract
-```
-**Install Truffle**
-```
-npm install -g truffle
-```
-**Compile Smart Contracts**
-```
-truffle compile
-```
-**Deploy Smart Contract on Ganache's development Network**
-```
-truffle migrate --reset
-```
-**Run Test Coverage**
-```
-truffle test
-```
+---
 
-### Setting up Client Application
+### 📖 How to Use the DApp
 
-**Create `.env` file to setup environment variables**
-```
-REACT_APP_NFT_STORAGE_APIKEY=<https://nft.storage APIKEY>
-```
+1.  **Switch to Sepolia**: In your wallet extension, change the network to **Sepolia Test Network**.
+2.  **Login**: Click "Login" on the Navbar and choose your wallet.
+3.  **Admin Functions**: The account you used to deploy the contracts is automatically the **Admin**. You can verify new stakeholders from the "Verify" tab.
+4.  **Traceability**: Each product is registered by a Farmer, processed by a Manufacturer, and tracked across the chain.
 
-**Install Dependencies**
-```
-npm install
-```
-**Start Client**
-```
-npm start
-```
-## Contributing
-1. Fork it
-2. Create your feature branch `(git checkout -b my-new-feature)`
-3. Commit your changes `(git commit -m 'Add some feature')`
-4. In case of multiple commits squash them. You can find guide here: [how to squash commits](https://medium.com/@slamflipstrom/a-beginners-guide-to-squashing-commits-with-git-rebase-8185cf6e62ec)
-4. Run the tests with `(npm run test)` and make sure all tests are passed.
-5. Push your branch `(git push origin my-new-feature)`
-6. Create a new Pull Request, following the template
+---
+
+## 🔒 Security Note
+**NEVER** share your `.env` file or commit it to GitHub. It contains your private Mnemonic which controls your funds. The `.gitignore` file should always include `.env`.
+
+---
+
+## 🏗 System Architecture
+The application follows a 3-layer architecture:
+- **Application Layer**: React.js Frontend.
+- **Blockchain Layer**: Solidity Smart Contracts.
+- **Infrastructure Layer**: Alchemy RPC & Sepolia Testnet.
+
+---
+
+## 📄 License
+This project is licensed under the MIT License.
